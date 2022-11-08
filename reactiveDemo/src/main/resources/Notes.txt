@@ -1,0 +1,17 @@
+
+                               MONO
+
+Mono -> its a publisher which emits atmost 1 item via signal
+
+
+       OnNext() -> has the data ...eg "vishal","Tom" etc....in mono one 1 can be there...in flux multiple will be there
+
+       onError() -> if failed mono then it emits onError signal
+
+       onComplete() -> Emits this signal once successfully completed
+       
+       
+       
+                              FLUX
+                              
+flux emits one or more signal

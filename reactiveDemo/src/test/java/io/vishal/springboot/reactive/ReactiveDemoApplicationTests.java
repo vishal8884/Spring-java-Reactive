@@ -4,6 +4,8 @@ import java.time.Duration;
 import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import reactor.core.publisher.Flux;
@@ -59,13 +61,94 @@ class ReactiveDemoApplicationTests {
 	void testFluxWithArrayList() throws InterruptedException {  //same as before method
 		System.out.println("--------------------testFluxWithArrayList()------------------------------------------");
 		
-		Flux.fromIterable(Arrays.asList("benq","logitech wireless keyboard","logitech mouse"))
-		    .delayElements(Duration.ofSeconds(2))
+		Flux.fromIterable(Arrays.asList("my","name","is","vishal"))
 		    .log()
 		    .map(data -> data.toUpperCase())
-		    .subscribe();
+		    .subscribe(System.out::println);
 		
-		Thread.sleep(6000); //to resolve above issue
+	}
+	
+	@Test
+	void testFluxWithArrayListUsingSubscriber() throws InterruptedException {  //same as before method
+		System.out.println("--------------------testFluxWithArrayListUsingSubscriber()------------------------------------------");
+		
+		Flux.fromIterable(Arrays.asList("the","tom","and","jerry"))
+		    .log()
+		    .map(data -> data.toUpperCase())
+		    .subscribe(new Subscriber<String>() {
+
+				@Override
+				public void onSubscribe(Subscription s) {
+					s.request(2);  //by default value will be zero if we dont add this and publisher will not publish
+					//as the capacity of the publisher is set to 2..it will not publish "jerry"
+				}
+
+				@Override
+				public void onNext(String order) {
+					System.out.println("The order is :: "+order);
+				}
+
+				@Override
+				public void onError(Throwable t) {
+					t.printStackTrace();
+					
+				}
+
+				@Override
+				public void onComplete() {
+					System.out.println("Completely Done!!");
+				}
+
+				
+			});
+		
+	}
+	
+	
+	
+	@Test
+	void testFluxWithArrayListUsingSubscriberWithBatching() throws InterruptedException {  //same as before method
+		System.out.println("--------------------testFluxWithArrayListUsingSubscriber()------------------------------------------");
+		
+		Flux.fromIterable(Arrays.asList("a","road","and","runner","boys"))
+		    .log()
+		    .map(data -> data.toUpperCase())
+		    .subscribe(new Subscriber<String>() {
+		    	
+		    	private long count = 0;
+		    	private Subscription subscription;
+
+				@Override
+				public void onSubscribe(Subscription subscription) {
+					this.subscription = subscription;
+					subscription.request(3);  //by default value will be zero if we dont add this and publisher will not publish
+					//as the capacity of the publisher is set to 2..it will not publish "jerry"
+				}
+
+				@Override
+				public void onNext(String order) {
+					count++;
+					if(count>=3) {    //this makes processing in batches of 3
+						count = 0;
+						subscription.request(3);
+					}
+					System.out.println("The order is :: "+order);
+				}
+
+				@Override
+				public void onError(Throwable t) {
+					t.printStackTrace();
+					
+				}
+
+				@Override
+				public void onComplete() {
+					System.out.println("Completely Done!!");
+				}
+
+				
+			});
+		
 	}
 
 }
