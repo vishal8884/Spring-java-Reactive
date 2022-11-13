@@ -1,0 +1,9 @@
+
+Core features of reactive programming
+
+
+1) New Programming Paradigm
+2) Async and non blocking
+3) Functional style code
+4) Data flow as event driven stream
+5) Backpressure on data streams

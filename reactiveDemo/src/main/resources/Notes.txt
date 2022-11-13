@@ -15,3 +15,10 @@ Mono -> its a publisher which emits atmost 1 item via signal
                               FLUX
                               
 flux emits one or more signal
+
+
+
+
+Flow
+
+Publisher                  subscribe()   -->   subscription()   --> Request(n)    --> onNext(data)   --> onComplete() or onError()                            Subscriber
