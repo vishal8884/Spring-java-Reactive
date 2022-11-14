@@ -30,6 +30,14 @@ public class CustomerDao {
 	}
 	
 	
+	public Flux<Customer> getCustomersStreamWithoutDelay(){
+		return Flux.range(1, 50)
+				.doOnNext(i -> System.out.println("processing count in stream:: "+i))
+				.map(i -> new Customer(i,"Customer"+i));
+				
+	}
+	
+	
 	private static void sleepExecution(int i) {
 		try {
 			Thread.sleep(1000);

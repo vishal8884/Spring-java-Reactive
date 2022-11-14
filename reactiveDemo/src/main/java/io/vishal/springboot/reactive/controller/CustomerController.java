@@ -30,7 +30,7 @@ public class CustomerController {
 //		return customerService.loadAllCustomersStream();
 //	}
 	
-	/* 
+	/*  
 	 * * browser is subscriber and db is publisher
 	 */
 	@GetMapping(value = "/reactive",produces = MediaType.TEXT_EVENT_STREAM_VALUE)   //run it from browser to see it coming one by one per second
