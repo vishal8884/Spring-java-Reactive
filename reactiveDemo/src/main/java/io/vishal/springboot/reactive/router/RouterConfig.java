@@ -24,6 +24,8 @@ public class RouterConfig {
 		return RouterFunctions.route()
 				.GET("/router/customers",(serverRequest) -> handler.loadCustomers(serverRequest))
 				.GET("/router/customers/stream", (serverRequest) -> streamHandler.getCustomers(serverRequest))
+				.GET("/router/customer/{input}",(serverRequest) -> handler.findCustomer(serverRequest))
+				.POST("/router/customer/save",(serverRequest) -> handler.saveCustomer(serverRequest))
 				.build();
 	}
 }
