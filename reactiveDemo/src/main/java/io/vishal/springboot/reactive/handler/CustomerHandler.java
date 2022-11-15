@@ -18,7 +18,8 @@ public class CustomerHandler {
 
 	public Mono<ServerResponse> loadCustomers(ServerRequest request) {
 		Flux<Customer> customerList = customerDao.getCustomersStreamWithoutDelay();
-		return ServerResponse.ok().body(customerList, Customer.class);
+		return ServerResponse.ok()
+				.body(customerList, Customer.class);
 	}
 
 	public Mono<ServerResponse> findCustomer(ServerRequest request) {

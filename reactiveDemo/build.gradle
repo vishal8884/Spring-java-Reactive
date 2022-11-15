@@ -19,6 +19,13 @@ dependencies {
 	
 	// https://mvnrepository.com/artifact/org.projectlombok/lombok
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-mongodb-reactive', version: '2.7.5'
+    
+    // embedded mongo for test
+    implementation group: 'de.svenkubiak', name: 'embedded-mongodb', version: '6.0.10'
+    
+    
 	
 }
 
