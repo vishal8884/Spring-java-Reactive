@@ -1,11 +1,13 @@
 package io.vishal.springboot.reactive;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.autoconfigure.webservices.client.WebServiceClientTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -15,6 +17,7 @@ import io.vishal.springboot.reactive.mongoDbCrud.dto.ProductDto;
 import io.vishal.springboot.reactive.mongoDbCrud.service.ProductService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 @RunWith(SpringRunner.class)
 @WebFluxTest(ProductController.class)
@@ -38,6 +41,17 @@ public class MongoDbControllerTests {
 	public void getProductsTest() {
 		Flux<ProductDto> productDtoToFlux = Flux.just(new ProductDto("102","mobile","1", "19000"),new ProductDto("103","mobile","1", "19000"));
 		when(service.getProducts()).thenReturn(productDtoToFlux);
+		
+		Flux<ProductDto> responseBody = webTestClient.get().uri("/products").exchange().expectStatus().isOk().returnResult(ProductDto.class).getResponseBody();
+		
+		StepVerifier.create(responseBody).expectSubscription().expectNext(new ProductDto("102","mobile","1", "19000"))
+		            .expectNext(new ProductDto("103","mobile","1", "19000")).verifyComplete();
+	}
+	
+	
+	public void getProductTest() {
+		Mono<ProductDto> productDtoMono = Mono.just(new ProductDto("102","mobile","1", "19000"));
+		when(service.getProduct(any())).thenReturn(productDtoMono);
 	}
 	
 }
