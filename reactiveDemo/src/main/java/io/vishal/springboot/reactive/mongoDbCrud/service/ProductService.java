@@ -8,10 +8,12 @@ import io.vishal.springboot.reactive.mongoDbCrud.dto.ProductDto;
 import io.vishal.springboot.reactive.mongoDbCrud.entity.Product;
 import io.vishal.springboot.reactive.mongoDbCrud.repo.ProductRepository;
 import io.vishal.springboot.reactive.mongoDbCrud.util.AppUtils;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
+@Slf4j
 public class ProductService {
 
 	@Autowired
@@ -32,9 +34,17 @@ public class ProductService {
 	}
 	
 	public Mono<ProductDto> saveProduct(Mono<ProductDto> productDtoMono){
-		return productDtoMono.map((productDto) -> AppUtils.dtoToEntity(productDto))
+		log.info("saving product");
+		Mono<ProductDto> savedProduct = productDtoMono
+				             .log()                                                          //This logs productsDto object
+				             .map((productDto) -> AppUtils.dtoToEntity(productDto))
+				             .log()                                                          //This logs product Object
 		                     .flatMap((product) -> productRepository.insert(product))        //one to many use flatmap
 		                     .map((product) -> AppUtils.entityToDto(product));               //single mapping we can use map
+		
+		//savedProduct.subscribe(productDto -> System.out.println(productDto)); //cannot subscribe one product multiple times
+		
+		return savedProduct;
 	}
 	
 	public Mono<ProductDto> updateProduct(Mono<ProductDto> productDtoMono,String id){
@@ -47,5 +57,11 @@ public class ProductService {
 	
 	public Mono<Void> deleteProduct(String id){
 		return productRepository.deleteById(id);
+	}
+	
+	
+	public Flux<Void> deleteAllProduct(){
+		return productRepository.findAll()
+		                 .flatMap((product) -> productRepository.delete(product));
 	}
 }
