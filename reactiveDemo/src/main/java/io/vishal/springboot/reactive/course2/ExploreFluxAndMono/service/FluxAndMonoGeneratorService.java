@@ -1,5 +1,6 @@
 package io.vishal.springboot.reactive.course2.ExploreFluxAndMono.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -50,17 +51,34 @@ public class FluxAndMonoGeneratorService {
 		FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
 		
 		//FLUX
+		System.out.println("----------------------FLUX-------------------------------------------------------------------\n");
 		Flux<String> namesFlux = fluxAndMonoGeneratorService.namesFlux();
 		namesFlux.subscribe(name -> System.out.println(name));
 		
+		
+		
+		System.out.println("-----------------------MONO------------------------------------------------------------------\n");
 		//MONO
 		Mono<String> nameMono = fluxAndMonoGeneratorService.nameMono();
 			nameMono.subscribe(name -> System.out.println(name));
 			
+			
+			
+			
+		System.out.println("----------------------FLUX USING MAP---------------------------------------------------------\n");
 		//FLUX using map
 		fluxAndMonoGeneratorService.namesFluxMap().subscribe(name -> System.out.println(name));
+		
+		
+		
+		
+		
+		System.out.println("----------------------FLUX FLATMAP---------------------------------------------------------\n");
+		//Flux flatMap
+		fluxAndMonoGeneratorService.namesFluxFlatMap().subscribe(name -> System.out.println(name));
 	}
 	
+	//Private Utils
 	
 	private Flux<String> splitStr(String str){
 		String[] splittedArr = str.split("");
